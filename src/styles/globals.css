@@ -1,0 +1,213 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Monologg design tokens — source: MONOLOGG_DESIGN_SYSTEM-2.md (§3–§4, §8, §11).
+ * Palette hexes are directional, pending client sign-off (§3).
+ *
+ * Components read semantic tokens only (--accent, --surface, --success…) —
+ * never raw hexes, never Coral/Navy directly.
+ *
+ * Scoping model:
+ *  - Light neutral values live on :root AND .light; dark values on .dark.
+ *    Both classes work on ANY element, so preview surfaces (kitchen sink) can
+ *    scope a theme to a container. The app toggles .dark on <html>.
+ *  - Audience accents bind via [data-audience="talent" | "client"] — on <html>
+ *    for the app, or on any container for previews. A container that re-binds
+ *    the audience must also carry its theme class (.light/.dark) so the
+ *    theme-aware --accent-text resolves correctly.
+ *
+ * WCAG 2.2 AA contrast (from the §3.7 audit) is annotated per pairing below.
+ */
+
+:root,
+.light {
+  /* ---------- NEUTRALS (light) ---------- */
+  --bg: #f4f1ec; /* Stage Cream canvas */
+  --surface: #ffffff;
+  --surface-2: #faf8f3;
+  --text: #14141f; /* Ink — on bg/surface: 16.2–18.3:1 (AA) */
+  --text-muted: #5b5b66; /* on surface: 6.0–6.7:1 (AA) */
+  --border: #e6e2d9; /* decorative dividers only — 3:1 not required */
+  --border-control: #8a8479; /* inputs/toggles — 3.71:1 (AA, UI component) */
+  --divider: #efebe2;
+  --focus: #3e7bfa; /* focus ring — 3.88:1 vs canvas (AA, UI component) */
+  --scrim: rgba(20, 20, 31, 0.5); /* modal/drawer backdrop */
+
+  /* ---------- ELEVATION (Mode A only) ---------- */
+  --shadow-sm: 0 2px 8px rgba(20, 20, 31, 0.06);
+  --shadow-md: 0 8px 20px rgba(20, 20, 31, 0.1);
+}
+
+.dark {
+  /* ---------- NEUTRALS (dark) ---------- */
+  --bg: #0e0e14;
+  --surface: #17171f;
+  --surface-2: #20202a;
+  --text: #f5f3ee; /* on bg/surface: 14.6–17.4:1 (AA) */
+  --text-muted: #a9a7b0; /* on surface: 7.5–8.1:1 (AA) */
+  --border: #2a2a34;
+  --border-control: #66666f; /* 3.13:1 (AA, UI component) */
+  --divider: #22222c;
+  --focus: #6c9bff; /* 7.12:1 (AA) */
+  --scrim: rgba(0, 0, 0, 0.6);
+
+  /* accents stay vivid in dark — only surfaces, text, borders, shadows invert */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+:root {
+  /* ---------- BRAND ACCENTS (raw — for binding only, never read by components) ---------- */
+  --talent-coral: #ff5a5f;
+  --talent-coral-deep: #dc2f35;
+  --talent-coral-text: #c4262c;
+  --client-navy: #1a1a2e;
+  --client-indigo: #4c4ce0;
+  --client-indigo-text-dark: #8a8af5;
+  --stage-cream: #f4f1ec;
+
+  /* ---------- STATUS (same in both themes; always color + icon + label, never color alone) ---------- */
+  --success: #0e7d52; /* confirmed / paid / released */
+  --success-fg: #ffffff; /* white on green — 5.15:1 (AA) */
+  --warning: #f2a93b; /* pending / in escrow */
+  --warning-fg: #14141f; /* INK on amber — 9.15:1 (AA); white on amber fails, never use it */
+  --error: #d93a3f;
+  --error-fg: #ffffff; /* white on red — 4.54:1 (AA) */
+  --info: #3e7bfa;
+  --info-fg: #ffffff; /* white on blue — 3.88:1 (AA large text / UI only; not small body text) */
+
+  /* ---------- TYPOGRAPHY ----------
+     Per client decision 2026-07-16 (supersedes design doc §4's Inter):
+     Spline Sans = headings/display, General Sans = body & subtext. */
+  --font-sans: 'General Sans', system-ui, sans-serif;
+  --font-heading: 'Spline Sans', 'General Sans', system-ui, sans-serif;
+  --font-display: 'Spline Sans', 'General Sans', sans-serif; /* Mode B oversized headlines */
+  --font-mono: 'IBM Plex Mono', monospace;
+  --size-display: 72px; /* range 56–88, Mode B */
+  --size-h1: 36px;
+  --size-h2: 26px;
+  --size-h3: 20px;
+  --size-body-lg: 16px;
+  --size-body: 14px;
+  --size-small: 12px;
+  --size-label: 12px;
+
+  /* ---------- SPACING (4px base) ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ---------- RADIUS ---------- */
+  --radius-xs: 4px; /* chips/badges */
+  --radius-sm: 8px; /* inputs */
+  --radius-btn: 10px; /* buttons */
+  --radius-md: 12px; /* cards */
+  --radius-lg: 16px; /* sheets/drawers */
+  --radius-pill: 999px;
+
+  /* ---------- MOTION ---------- */
+  --dur-micro: 150ms;
+  --dur-short: 300ms;
+  --dur-medium: 500ms;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ---------- TWO-AUDIENCE ACCENT BINDING ----------
+   Buttons fill with --accent-solid (+ --accent-fg); icons/active states use
+   --accent; colored TEXT/LINKS use --accent-text (theme-aware). Never put raw
+   --accent text on a light surface — bright coral is 2.71:1 there (fails AA). */
+
+[data-audience='talent'] {
+  --accent: #ff5a5f; /* Talent Coral — accents, active states, icons */
+  --accent-solid: #dc2f35; /* button fill — white text 4.67:1 (AA) */
+  --accent-hover: #c42d31;
+  --accent-fg: #ffffff;
+  --accent-text: #c4262c; /* coral text/links on LIGHT — 5.09:1 (AA) */
+}
+.dark [data-audience='talent'],
+[data-audience='talent'].dark {
+  --accent-text: #ff5a5f; /* coral text on dark — 5.84:1 (AA) */
+}
+[data-audience='talent'].light {
+  --accent-text: #c4262c; /* explicit light scope wins over an ancestor .dark */
+}
+
+[data-audience='client'] {
+  --accent: #4c4ce0; /* brightened Client Navy/indigo */
+  --accent-solid: #4c4ce0; /* button fill — white text 6.14:1 (AA) */
+  --accent-hover: #3a3ac4;
+  --accent-fg: #ffffff;
+  --accent-text: #4c4ce0; /* indigo text/links on LIGHT — 5.45:1 (AA) */
+}
+.dark [data-audience='client'],
+[data-audience='client'].dark {
+  --accent-text: #8a8af5; /* indigo text on dark — 5.97:1 (AA) */
+}
+[data-audience='client'].light {
+  --accent-text: #4c4ce0;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+
+  body {
+    @apply bg-bg text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Entrance motion for overlays/toasts — ease-out, no bounce (§8).
+   The reduced-motion rule above collapses these. */
+@keyframes m-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes m-sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: m-fade-in var(--dur-short) var(--ease-out);
+  }
+  .animate-sheet-in {
+    animation: m-sheet-in var(--dur-short) var(--ease-out);
+  }
+}

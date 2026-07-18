@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(npm test *)",
+      "Bash(npx tsc *)",
+      "Read(//private/tmp/**)",
+      "Bash(lsof -nP -iTCP:5173 -sTCP:LISTEN)",
+      "Bash(curl -s -o /dev/null -w \"root: HTTP %{http_code}\\\\n\" \"http://localhost:5173/\")",
+      "Bash(curl -s -o /dev/null -w \"/creator: HTTP %{http_code}\\\\n\" \"http://localhost:5173/creator\")",
+      "Bash(curl -s \"http://localhost:5173/\")",
+      "Bash(kill 26771)",
+      "Bash(lsof -tnP -iTCP:5173 -sTCP:LISTEN)",
+      "Bash(xargs kill)",
+      "Bash(curl -s -o /dev/null -w \"fontshare: HTTP %{http_code}\\\\n\" \"https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap\")",
+      "Bash(curl -s \"https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap\")",
+      "Bash(curl -s -o /dev/null -w \"google \\(spline sans\\): HTTP %{http_code}\\\\n\" \"https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap\")",
+      "Bash(curl -s -o /dev/null -w \"google: %{http_code}\\\\n\" \"https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&display=swap\")",
+      "Bash(curl -s -o /dev/null -w \"fontshare api: %{http_code}\\\\n\" \"https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700\")",
+      "Bash(ping -c1 -t2 api.fontshare.com)",
+      "Bash(curl -sI -m 8 https://registry.npmjs.org/ -o /dev/null -w \"npm registry: %{http_code}\\\\n\")",
+      "Bash(curl -s -m 8 -o /dev/null -w \"example.com: %{http_code}\\\\n\" https://example.com)",
+      "Bash(curl -s -o /dev/null -w \"dev server: HTTP %{http_code}\\\\n\" http://localhost:5173/kitchen-sink)",
+      "Bash(curl -s -o /dev/null -w \"/creator: HTTP %{http_code}\\\\n\" http://localhost:5173/creator)",
+      "Bash(curl -s -o /dev/null -w \"/settings/appearance: %{http_code}\\\\n\" http://localhost:5173/settings/appearance)"
+    ]
+  }
+}
