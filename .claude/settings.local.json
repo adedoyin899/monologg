@@ -24,7 +24,8 @@
       "Bash(curl -s -m 8 -o /dev/null -w \"example.com: %{http_code}\\\\n\" https://example.com)",
       "Bash(curl -s -o /dev/null -w \"dev server: HTTP %{http_code}\\\\n\" http://localhost:5173/kitchen-sink)",
       "Bash(curl -s -o /dev/null -w \"/creator: HTTP %{http_code}\\\\n\" http://localhost:5173/creator)",
-      "Bash(curl -s -o /dev/null -w \"/settings/appearance: %{http_code}\\\\n\" http://localhost:5173/settings/appearance)"
+      "Bash(curl -s -o /dev/null -w \"/settings/appearance: %{http_code}\\\\n\" http://localhost:5173/settings/appearance)",
+      "Bash(ssh -T -o BatchMode=yes -o ConnectTimeout=10 git@github.com)"
     ]
   }
 }
